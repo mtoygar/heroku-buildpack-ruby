@@ -20,4 +20,15 @@ class LanguagePack::Rails6 < LanguagePack::Rails5
       super
     end
   end
+
+  private
+  def db_prepare_test_rake_tasks
+    schema_load    = rake.task("db:schema:load")
+    db_migrate     = rake.task("db:migrate")
+
+    return [] if db_migrate.not_defined?
+    return [db_migrate] if schema_load.not_defined?
+
+    [schema_load, db_migrate]
+  end
 end
